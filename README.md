@@ -27,7 +27,10 @@
 - 使用 `git commit` 保存具有实际意义的版本记录；
 - 使用 `git push` 将本地提交同步到 GitHub；
 - 使用 `git switch -c` 创建独立分支完成补充修改；
-- 使用 GitHub Pull Request 检查分支改动并合并回 `main`。
+- 使用 Pull Request 检查分支修改并合并到 `main`；
+- 使用 `git pull` 将远程仓库合并后的最新版本同步回本地；
+- 使用 `.gitignore` 排除不需要纳入版本管理的临时文件；
+- 使用目录结构分别整理内训方案、授课型幻灯片和相关素材。
 
 在操作过程中，我也逐渐理解了工作区、暂存区、本地仓库和远程仓库之间的区别，而不只是完成文件上传。
 
@@ -38,6 +41,12 @@
 第一次 `git add` Markdown 文件时，还遇到了 `LF will be replaced by CRLF` 的提示。查明后了解到这是 Windows 与 Linux/macOS 常用换行符不同造成的提示，对于本次 Markdown 文件不会影响正常使用，因此暂未额外修改。
 
 由于最开始克隆的是一个空仓库，本地第一次 commit 后，`git status` 还提示远程 `origin/main` 尚不存在。完成第一次 `git push -u origin main` 后，本地 `main` 与远程 `main` 建立了跟踪关系，之后即可直接使用 `git push` 同步提交。
+
+在补充授课型幻灯片 PDF 时，我尝试新建独立分支进行修改，并通过 Pull Request 合并回 `main`。第一次合并后发现，PowerPoint 在文件打开时自动生成的 `~$` 开头临时文件也被一并提交到了仓库。查明后了解到，这类文件只是 Office 用于记录文件编辑状态的临时文件，并不属于项目成果，因此将其从仓库中删除，并在仓库根目录添加 `.gitignore`，使用 `~$*` 规则忽略此类临时文件。之后通过新的 commit 和 push 完成仓库清理。
+
+后续在整理仓库时，我还遇到了 `.git/index.lock` 导致 Git 无法继续执行的问题。执行 `git stash` 和 `git switch` 时，Git 提示 `index.lock: File exists`，说明仓库中存在锁文件，Git 为了避免多个进程同时修改索引而拒绝继续写入。
+
+排查时，我先使用 `tasklist | findstr /I git` 检查是否仍有 Git 进程正在运行；确认没有相关进程后，再删除残留的 `.git/index.lock` 文件。之后重新执行原来的 Git 操作即可继续。
 
 ### 3. 如果以后需要多名教学部成员共同维护这个仓库，你认为应当如何组织文件与修改流程？
 
